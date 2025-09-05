@@ -97,6 +97,62 @@ tifffile==2023.9.26           # Gestion des fichiers TIFF
 #### Windows
 - **OpenSlide** : Téléchargez et installez depuis [openslide.org](https://openslide.org/download/)
 - **Microsoft Visual C++ Redistributable** : Requis pour OpenCV
+### Installation via WSL et Samapi
+
+Cette méthode permet d’installer et d’exécuter `samapi` dans un environnement isolé sous **WSL (Windows Subsystem for Linux)**.
+
+#### Installer WSL
+Depuis PowerShell (exécuté en tant qu’administrateur) :
+```bash
+wsl --install -d Ubuntu
+````
+
+Redémarrez puis ouvrez **Ubuntu** depuis le menu Démarrer.
+
+#### Préparer Ubuntu
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y build-essential git curl wget ca-certificates
+```
+
+#### Installer Miniconda
+
+```bash
+cd ~
+wget [https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh)
+bash Miniconda3-latest-Linux-x86_64.sh -b -p "$HOME/miniconda3"
+"$HOME/miniconda3/bin/conda" init bash
+exec bash
+```
+
+#### Créer et activer l’environnement Conda
+
+```bash
+conda create -n samapi -y python=3.10
+conda activate samapi
+```
+
+#### Installer CUDA Toolkit (optionnel, si vous avez un GPU NVIDIA)
+
+```bash
+conda install -c conda-forge -y cudatoolkit=11.8
+```
+
+#### Installer Samapi depuis GitHub
+
+```bash
+python -m pip install git+[https://github.com/ksugar/samapi.git](https://github.com/ksugar/samapi.git)
+```
+
+#### Lancer le serveur Samapi
+
+```bash
+uvicorn samapi.main:app --workers 2 --host 0.0.0.0 --port 8000
+```
+
+Ensuite, ouvrez votre navigateur à l’adresse :
+`http://localhost:8000`
 
 #### macOS
 ```bash
